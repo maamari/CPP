@@ -33,6 +33,7 @@ class DEList {
  private:
   DEItem* head;
   DEItem* tail;
+  int items;
 };
 
 #endif

@@ -1,30 +1,25 @@
 #include "delist.h"
 #include <iostream>
 
-// Constructs an empty Double-Ended List
-DEList::DEList() {
+DEList::DEList(){
   head = NULL;
   tail = NULL;
+  items = 0;
 }
 
-// Destructor to clean-up memory of current list
-DEList::~DEList() {
+DEList::~DEList(){
   DEItem* temp = head;
 
-  // deletes all nodes
-  while (head != tail)
+  while(head != tail)           //while the list isn't of size 1
   {
     head = head->next;
-    delete temp;
-    temp = tail;
+    delete temp;                //delete the current location
   }
-
-  delete head;
+  delete head;                  //delete the head afterwards
 }
 
-// returns a Boolean 'true' if the list is empty
-bool DEList::empty() {
-	if (!head && !tail){
+bool DEList::empty(){
+	if(!items){                   //if there are no items
 		return true;
 	}
 	else{
@@ -32,129 +27,101 @@ bool DEList::empty() {
 	}
 }
 
-// returns number of items in the list
-int DEList::size() {
-  	int items = 0;
-
-  // check if list is empty
-	if(empty()){
-		return 0;
-	}
-	DEItem* loc = head;
-
-  // try doing it from head to tail
-  	while(loc){
-	    items++;
-	    loc = loc->next;
-  	}
-
-  return items;
+int DEList::size(){
+  return items;                 //return # of items in list
 }
 
-// returns front item or -1 if empty list
 int DEList::front() {
-  if (empty()){
-    return -1;
-}
-  else{
-    return head->val;
-}
+  if(empty())
+  {
+    return -1;                  //return -1 if emtpy
+  }
+  else
+  {
+    return head->val;           //return the value in the head
+  }
 }
 
-// returns back item or -1 if empty list
 int DEList::back(){
-  if (empty()){
-    return -1;
-}
-  else{
-    return tail->val;
-}
+  if(empty())
+  {
+    return -1;                  //return -1 if empty
+  }
+  else
+  {
+    return tail->val;           //return the value of the head
+  }
 }
 
 // Adds a new integer to the front of the list
 void DEList::push_front(int new_val) {
-  // Create a new list item
-  DEItem* item2 = new DEItem;
-  // Assign new_val to the new node
-  item2->val = new_val;
 
-  // assign the pointers for prev and next
-  item2->prev = NULL; // the previous pointer is empty
-  item2->next = head; // the next points to the head
+  DEItem* newItem = new DEItem; //create a new item in list
+  newItem -> val = new_val;     //assign the value to that node
+  newItem -> prev = NULL;       //the previous pointer should be empty
 
-  // if list empty, update both head and tail to item2
-  if (empty())
+  if(empty())
   {
-    head = item2;
-    tail = item2;
+    newItem -> next = NULL;     //if the list is empty
+    head = newItem;             //update head and tail to the new item
+    tail = newItem;
   }
   else
   {
-    // update head
-    head->prev = item2;
-    head = item2;
+    newItem -> next = head;     //the next pointer points to the head
+    head -> prev = newItem;     //the head i
+    head = newItem;
   }
+  items++;
 }
 
 // Adds a new integer to the back of the list
 void DEList::push_back(int new_val) {
-  // Create a new list item
-  DEItem* item2 = new DEItem;
-  // Assign new_val to the new node
-  item2->val = new_val;
 
-  // assign the pointers for prev and next
-  item2->prev = tail; // the tail(last item) is now the previous
-  item2->next = NULL; // the next pointer is empty
+  DEItem* newItem = new DEItem;
+  newItem -> val = new_val;
+  newItem -> next = NULL; 
 
-  // if list empty, update both head and tail to item2
-  if (empty())
+  if(empty())
   {
-    head = item2;
-    tail = item2;
+    newItem -> prev = NULL;
+    head = newItem;
+    tail = newItem;
   }
   else
   {
-    // update tail
-    tail->next = item2;
-    tail = item2;
+    newItem -> prev = tail;
+    tail -> next = newItem;
+    tail = newItem;
   }
+  items++;
 }
 
 // Removes the front item of the list (if it exists)
 void DEList::pop_front() {
   if (!empty())
   {
-    // Special case when there is only one item in the list
-    if (size())
+    if(size() == 1)
     {
       delete head;
       tail = NULL;
-      head = NULL;
+      head = tail;
     }
     else
     {
-      // temp var holds the new front item
-      DEItem* temp = head->next;
-      // Set front to NULL
-      temp->prev = NULL;
-      // reasign head;
-      delete head;
-      head = temp;
-
-      // delete temp;
+      DEItem* temp = head;
+      head = temp -> next;
+      delete temp;
     }
+    items--;
   }
-  else
-    std::cerr << "The list is empty! Nothing to delete" << std::endl;
 }
 
 // Removes the back item of the list (if it exists)
 void DEList::pop_back() {
   if (!empty())
   {
-    // Special case when there is only one item in the list
-    if (size())
+    if (size() == 1)
     {
       delete head;
       tail = NULL;
@@ -162,17 +129,10 @@ void DEList::pop_back() {
     }
     else
     {
-      // temp var holds the new last item
-      DEItem* temp = tail->prev;
-      // Set front to NULL
-      temp->next = NULL;
-      // reasign head;
-      delete tail;
-      tail = temp;
-
-      // delete temp;
+      DEItem* temp = tail;
+      tail = temp -> prev;
+      delete temp;
     }
+    items--;
   }
-  else
-    std::cerr << "The list is empty! Nothing to delete" << std::endl;
 }
