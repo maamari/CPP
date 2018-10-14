@@ -1,1 +1,0 @@
-- Some simple, introductory projects done in C++
